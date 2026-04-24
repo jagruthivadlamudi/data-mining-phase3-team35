@@ -168,25 +168,32 @@ plt.savefig("output/adjusted_pay_gap_by_group.png")
 plt.close()
 
 # Graph 3: Ethnicity Trend Over Time
-ethnicity_plot = clean_ethnicity.copy()
+year_col = "Characteristic"
 
-if "Characteristic" in ethnicity_plot.columns:
-    ethnicity_plot["Characteristic"] = pd.to_numeric(ethnicity_plot["Characteristic"], errors="coerce")
-    ethnicity_plot = ethnicity_plot.dropna(subset=["Characteristic"])
+plt.figure(figsize=(10,6))
 
-    plt.figure(figsize=(10, 6))
+clean_ethnicity[year_col] = pd.to_numeric(clean_ethnicity[year_col], errors="coerce")
 
-    for col in percentage_cols:
-        if col in ethnicity_plot.columns:
-            plt.plot(ethnicity_plot["Characteristic"], ethnicity_plot[col], marker="o", label=col)
+plot_cols = [
+    "Asian+",
+    "Black+",
+    "Latinx+",
+    "Native American+*",
+    "White+"
+]
 
-    plt.title("Google Workforce Ethnicity Trend Over Time")
-    plt.xlabel("Year")
-    plt.ylabel("Percentage")
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig("output/google_ethnicity_trend.png")
-    plt.close()
+for col in plot_cols:
+    plt.plot(clean_ethnicity[year_col], clean_ethnicity[col], marker='o', label=col)
+
+plt.title("Google Workforce Ethnicity Trend Over Time")
+plt.xlabel("Year")
+plt.ylabel("Percentage")
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig("output/google_ethnicity_trend.png")
+plt.show()
 
 # Graph 4: Audit Issue Summary
 audit_counts = clean_salary[flag_columns].sum()
